@@ -11,11 +11,11 @@
     <div id="root"></div>
     <script type="text/babel">
         const rootElement = document.getElementById('root')
-        const message = (props) => <p>{props.msg}</p>
+        const Message = (props) => <p>{props.children}</p>
         const el = (
             <div>
-                {message({msg: 'Hola a todos'})}
-                {message({msg: 'Adios mundo cruel :('})}
+                {<Message>Hola a todos</Message>}
+                {<Message>Adios mundo cruel :(</Message>}
             </div>
         )
         ReactDOM.render(el, rootElement)
