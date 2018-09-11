@@ -11,11 +11,15 @@
     <div id="root"></div>
     <script type="text/babel">
         const rootElement = document.getElementById('root')
-        const Message = (props) => <p>{props.children}</p>
+        const Message = (props) => <div>{props.children}</div>
         const el = (
             <div>
-                {<Message>Hola a todos</Message>}
-                {<Message>Adios mundo cruel :(</Message>}
+                <Message>Hola a todos</Message>
+                <Message>Adios mundo cruel :(</Message>
+                <Message>
+                    Esto es otro mensaje al que se le anidaran otros mensajes
+                    <Message>Un mensaje anidado aqui</Message>
+                </Message>
             </div>
         )
         ReactDOM.render(el, rootElement)
