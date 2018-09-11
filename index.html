@@ -24,10 +24,15 @@
         //     React.createElement('p', {className: 'my-class'}, 'un parrafito con clase css'))
 
         //const el = <div className='container'>Hola JSX!!</div>
+        const props = {
+            className: 'another-container',
+            children: 'Hola a todos!!'
+        }
         const el = (
             <div className='container'>
                 <h2>Un encabezado con JSX</h2>
                 <p className='my-class'>un parrafo con clase css</p>
+                <p {...props}>el props children de este elemento se sobreescribe</p>
             </div>
         )
 
