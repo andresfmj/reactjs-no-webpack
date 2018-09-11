@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>04 - props en JSX</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root')
+
+        const props = {
+            className: 'another-container',
+            children: 'Hola a todos!!'
+        }
+        const el = (
+            <div className='container'>
+                <h2>Un encabezado con JSX</h2>
+                <p className='my-class'>un parrafo con clase css</p>
+                <p {...props}>el props children de este elemento se sobreescribe</p>
+            </div>
+        )
+
+        ReactDOM.render(el, rootElement)
+    </script>
+</body>
+</html>
