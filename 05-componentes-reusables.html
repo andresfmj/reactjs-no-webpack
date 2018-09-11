@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>04 - props en JSX</title>
+    <title>05 - componentes reusables</title>
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
@@ -11,19 +11,13 @@
     <div id="root"></div>
     <script type="text/babel">
         const rootElement = document.getElementById('root')
-
-        const props = {
-            className: 'another-container',
-            children: 'Hola a todos!!'
-        }
+        const message = (props) => <p>{props.msg}</p>
         const el = (
-            <div className='container'>
-                <h2>Un encabezado con JSX</h2>
-                <p className='my-class'>un parrafo con clase css</p>
-                <p {...props}>el props children de este elemento se sobreescribe</p>
+            <div>
+                {message({msg: 'Hola a todos'})}
+                {message({msg: 'Adios mundo cruel :('})}
             </div>
         )
-
         ReactDOM.render(el, rootElement)
     </script>
 </body>
