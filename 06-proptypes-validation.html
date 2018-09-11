@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>06 - PropTypes validations</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/prop-types@15.6.2/prop-types.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root')
+
+        function Saludar(props) {
+            return (
+                <div>Hola {props.firstName} {props.lastName || 'no lastname'}</div>
+            )
+        }
+
+        // const PropTypes = {
+        //     string(props, propName, componentName) {
+        //         if (typeof props[propName] !== 'string') {
+        //             return new Error(`deberias pasar una cadena de texto para ${propName} en el componente ${componentName} pero tu pasaste un ${typeof props[propName]}`)
+        //         }
+        //     }
+        // }
+
+        Saludar.propTypes = {
+            firstName: PropTypes.string.isRequired,
+            lastName: PropTypes.string.isRequired
+        }
+
+        ReactDOM.render(<Saludar firstName='Fulanito' lastName='Sutanito' />, rootElement)
+    </script>
+</body>
+</html>
