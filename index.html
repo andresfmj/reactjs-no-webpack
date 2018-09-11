@@ -5,10 +5,11 @@
     <title>React sin webpack</title>
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/javascript">
+    <script type="text/babel">
         const rootElement = document.getElementById('root')
         // const el = document.createElement('div')
         // el.textContent = 'Hola javascript vanilla'
@@ -17,10 +18,12 @@
 
         //const el = React.createElement('div', {className: 'container'}, 'Hola React sin webpack')
 
-        const el = React.createElement('div', {className: 'container'}, 
-            React.createElement('h2', {className: 'title-header'}, 'Esto es un header h1'),
-            React.createElement('p', null, 'Oh esto es un parrafo lolol'),
-            React.createElement('p', {className: 'my-class'}, 'un parrafito con clase css'))
+        // const el = React.createElement('div', {className: 'container'}, 
+        //     React.createElement('h2', {className: 'title-header'}, 'Esto es un header h1'),
+        //     React.createElement('p', null, 'Oh esto es un parrafo lolol'),
+        //     React.createElement('p', {className: 'my-class'}, 'un parrafito con clase css'))
+
+        const el = <div className='container'>Hola JSX!!</div>
 
         ReactDOM.render(el, rootElement)
     </script>
