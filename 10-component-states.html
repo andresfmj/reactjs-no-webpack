@@ -49,16 +49,47 @@
     <div id="root"></div>
     <script type="text/babel">
         const rootElement = document.getElementById('root')
+        let timer = null
+
+        function Aux(props) {
+            return props.children
+        }
+
+        class Stopwatch extends React.Component {
+            
+            componentWillUnmount() {
+                console.log('[WillUnmount] Stopwatch')
+                clearInterval(timer)
+                timer = null
+            }
+
+            render() {
+                return (
+                    <div className='App'>
+                        <label>
+                            ¡Han pasado {this.props.time} segundo{this.props.time > 1 ? 's' : this.props.time == 0 ? 's' : ''}!
+                        </label>
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <button className={this.props.time > 0 ? 'yellow' : 'green'} 
+                                    onClick={this.props.clickedStart}>{this.props.running ? 'Detener' : this.props.time > 0 ? 'Reanudar' : 'Comenzar'}</button>
+                            <button onClick={this.props.clickedReset}>Reiniciar</button>
+                        </div>
+                    </div>
+                )
+            }
+        }
 
         class Cronometro extends React.Component {
-            state = {time: 0, running: false}
+            state = {time: 0, running: false, show: true}
 
             handleStartTimer = () => {
                 if (this.state.running) {
-                    clearInterval(this.timer)
+                    clearInterval(timer)
                 } else {
-                    this.timer = setInterval(() => {
-                        this.setState({time: this.state.time + 1})
+                    timer = setInterval(() => {
+                        this.setState({time: this.state.time + 1}, () =>{
+                            console.log(this.state.time)
+                        })
                     }, 1000)
                 }
                 this.setState(prevState => ({running: !prevState.running}))
@@ -66,10 +97,21 @@
 
             handleReset = () => {
                 if (this.state.running) {
-                    clearInterval(this.timer)
+                    clearInterval(timer)
                     this.setState({running: false, time: 0})
                 } else {
                     this.setState({time: 0})
+                }
+            }
+
+            toggleComponentHandler = () => {
+                this.setState(prevState => ({show: !prevState.show}))
+                if (timer === null && this.state.running) {
+                    timer = setInterval(() => {
+                        this.setState({time: this.state.time + 1}, () => {
+                            console.log(this.state.time)
+                        })
+                    }, 1000)
                 }
             }
 
@@ -77,16 +119,20 @@
                 const {time, running} = this.state
 
                 return (
-                    <div className='App'>
-                        <label>
-                            ¡Han pasado {time} segundo{time > 1 ? 's' : time == 0 ? 's' : ''}!
-                        </label>
-                        <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <button className={time > 0 ? 'yellow' : 'green'} 
-                                    onClick={this.handleStartTimer}>{running ? 'Detener' : time > 0 ? 'Reanudar' : 'Comenzar'}</button>
-                            <button onClick={this.handleReset}>Reiniciar</button>
+                    <Aux>
+                        {this.state.show
+                            ?
+                                <Stopwatch time={time} running={running} 
+                                    clickedStart={this.handleStartTimer} clickedReset={this.handleReset} />
+                            : null
+                        }
+                        <div style={{width: '660px', margin: '0 auto'}}>
+                            <hr style={{border: 'none', borderBottom: '1px solid #ccc'}} />
+                            <span style={{display: 'flex', justifyContent: 'center'}}>
+                                <input type='checkbox' checked={this.state.show} onChange={this.toggleComponentHandler} /> {this.state.show ? 'Esconder' : 'Mostrar'} componente
+                            </span>
                         </div>
-                    </div>
+                    </Aux>
                 )
             }
         }
