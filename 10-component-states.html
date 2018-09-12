@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>10 - Component states</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
+    <link href="https://fonts.googleapis.com/css?family=Gamja+Flower|Kosugi+Maru" rel="stylesheet"> 
+    <style>
+        .App {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 2px solid #eee;
+            padding: 8px;
+            width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            font-family: 'Gamja Flower', cursive;
+            text-align: center;
+            font-size: 2em;
+        }
+        button {
+            font: inherit;
+            font-family: 'Kosugi Maru', sans-serif;
+            height: 45px;
+            border: 1px solid salmon;
+            background-color: lightsalmon;
+            box-sizing: border-box;
+            box-shadow: 2px 2px 2px #ccc;
+            margin: 6px;
+        }
+        button:active {
+            background-color: salmon;
+        }
+        .green {
+            border-color: seagreen;
+            background-color: lightseagreen;
+        }
+        .yellow {
+            border-color: yellowgreen;
+            background-color: lightyellow;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root')
+
+        class Cronometro extends React.Component {
+            state = {time: 0, running: false}
+
+            handleStartTimer = () => {
+                if (this.state.running) {
+                    clearInterval(this.timer)
+                } else {
+                    this.timer = setInterval(() => {
+                        this.setState({time: this.state.time + 1})
+                    }, 1000)
+                }
+                this.setState(prevState => ({running: !prevState.running}))
+            }
+
+            handleReset = () => {
+                if (this.state.running) {
+                    clearInterval(this.timer)
+                    this.setState({running: false, time: 0})
+                } else {
+                    this.setState({time: 0})
+                }
+            }
+
+            render() {
+                const {time, running} = this.state
+
+                return (
+                    <div className='App'>
+                        <label>
+                            ¡Han pasado {time} segundo{time > 1 ? 's' : time == 0 ? 's' : ''}!
+                        </label>
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <button className={time > 0 ? 'yellow' : 'green'} 
+                                    onClick={this.handleStartTimer}>{running ? 'Detener' : time > 0 ? 'Reanudar' : 'Comenzar'}</button>
+                            <button onClick={this.handleReset}>Reiniciar</button>
+                        </div>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Cronometro />, rootElement)
+    </script>
+</body>
+</html>
