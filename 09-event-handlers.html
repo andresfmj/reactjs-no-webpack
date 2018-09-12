@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>09 - manejadores de eventos</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
+    <style>
+        button {
+            font-size: 1.8em;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type='text/babel'>
+        const rootElement = document.getElementById('root')
+
+        const state = {eventCounts: 0, username: ''}
+
+        function App(props) {
+            return (
+                <div>
+                    <h2>Han habido {props.eventCounts} eventos</h2>
+                    <div>
+                        <button onClick={props.clicked}></button>
+                    </div>
+                    <div>
+                        <p>Escribiste: {props.textValue}</p>
+                        <input type='text' onChange={props.changed} />
+                    </div>
+                </div>
+            )
+        }
+
+        function setState(newState) {
+            Object.assign(state, newState)
+            renderApp()
+        }
+
+        function renderApp() {
+            ReactDOM.render(
+                <App 
+                    eventCounts={state.eventCounts} 
+                    textValue={state.username}
+                    clicked={() => setState({eventCounts: state.eventCounts + 1})}
+                    changed={event => setState({username: event.target.value})} />, rootElement)
+        }
+
+        renderApp()
+    </script>
+</body>
+</html>
