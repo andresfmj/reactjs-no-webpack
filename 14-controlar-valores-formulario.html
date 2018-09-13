@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>14 - controlar valores en inputs del formulario</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
+</head>
+<body>
+    <div id="root"></div>
+    <script type='text/babel'>
+        const rootElement = document.getElementById('root')
+        class FancyForm extends React.Component {
+            state = {commaSeparated: '', multiline: '', multiselect: []}
+            static availOpts = [
+                'apple',
+                'orange',
+                'fruits',
+                'grapes',
+                'peach',
+                'brocoli'
+            ]
+
+            handleTextChange = event => {
+                const {value} = event.target
+                const allValues = value.split(',').map(v => v.trim()).filter(v => v !== '')
+                this.setState({
+                    commaSeparated: value, 
+                    multiline: allValues.join('\n'),
+                    multiselect: allValues.filter(v => FancyForm.availOpts.includes(v))
+                })
+            }
+            handleMultiline = event => {
+                const {value} = event.target
+                const allValues = value.split('\n').map(v => v.trim()).filter(v => v !== '')
+                this.setState({
+                    commaSeparated: allValues.join(','),
+                    multiline: value,
+                    multiselect: allValues.filter(v => FancyForm.availOpts.includes(v))
+                })
+            }
+            handleMultiselect = event => {
+                const allValues = Array.from(event.target.selectedOptions)
+                    .map(o => o.value)
+                this.setState({
+                    multiselect: allValues,
+                    multiline: allValues.join('\n'),
+                    commaSeparated: allValues.join(',')
+                })
+
+            }
+
+            render() {
+                const {commaSeparated, multiline, multiselect} = this.state
+                return (
+                    <div>
+                        <form onSubmit={e => e.preventDefault()}>
+                            <label>
+                                valores separados por comma:<br />
+                                <input 
+                                    type='text' 
+                                    value={commaSeparated} 
+                                    onChange={this.handleTextChange} />
+                            </label><br /><br />
+                            <label>
+                                valores multilinea:<br />
+                                <textarea 
+                                    value={multiline} 
+                                    rows={FancyForm.availOpts.length} 
+                                    onChange={this.handleMultiline} />
+                            </label><br /><br />
+                            <label>
+                                <select multiple value={multiselect} size={FancyForm.availOpts.length} onChange={this.handleMultiselect}>
+                                    {FancyForm.availOpts.map(item => <option key={item} name={item}>{item}</option>)}
+                                </select>
+                            </label>
+                        </form>
+                    </div>
+                )
+            }
+        }
+        ReactDOM.render(<FancyForm />, rootElement)
+    </script>
+</body>
+</html>
