@@ -6,14 +6,15 @@
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
-    <script src="https://raw.githubusercontent.com/micku7zu/vanilla-tilt.js/master/dist/vanilla-tilt.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.4.1/vanilla-tilt.min.js"></script>
     <style>
         .tilt-root {
             height: 150px;
             background-color: red;
             width: 200px;
-            background-image: -webkit-linear-gradient(315deg, #ff00ba 0%, #fae713 100%);
-            background-image: linear-gradient(315deg, #ff00ba, 0%, #fae713 100%);
+            background: -webkit-gradient(left top, right top, color-stop(0%, rgba(241,231,103,1)), color-stop(15%, rgba(241,231,103,1)), color-stop(74%, rgba(254,182,69,1)), color-stop(100%, rgba(254,182,69,1)));
+            background: -webkit-linear-gradient(left, rgba(241,231,103,1) 0%, rgba(241,231,103,1) 15%, rgba(254,182,69,1) 74%, rgba(254,182,69,1) 100%);
+            background: linear-gradient(to right, rgba(241,231,103,1) 0%, rgba(241,231,103,1) 15%, rgba(254,182,69,1) 74%, rgba(254,182,69,1) 100%);
             transform-style: preserve-3d;
             will-change: transform;
             transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
@@ -24,7 +25,7 @@
             height: 50%;
             top: 50%;
             left: 50%;
-            transform: translateZ(30px) translateX(-50px) translateY(-30px);
+            transform: translateZ(40px) translateX(-50px) translateY(-30px);
             box-shadow: 0 0 5px 0 rgba(51, 51, 51, 0.3);
             background-color: white;
         }
@@ -44,14 +45,17 @@
 
         class Tilt extends React.Component {
             componentDidMount() {
-                console.log(this.rootNode)
+                VanillaTilt.init(this.rootNode, {
+                    max: 35,
+                    speed: 400,
+                    glare: true,
+                    'max-glare': 0.5,
+                })
             }
             render() {
-                return (
+                return ( // ref obtiene una referencia directa al elemento en el dom real y la guarda por medio de una variable de clase
                     <div ref={node => (this.rootNode = node)} className='tilt-root'>
-                        <div className='tilt-child'>
-                            <div {...this.props} />
-                        </div>
+                        <div className='tilt-child' {...this.props}></div>
                     </div>
                 )
             }
