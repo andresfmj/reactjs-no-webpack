@@ -19,13 +19,40 @@
                 {id: 'b', value: 'banana'},
                 {id: 'p', value: 'peach'}
             ]
+            state = {items: []}
+            addItem = () => {
+                const updateItems = [...this.state.items]
+                updateItems.push(App.items.find(i => !updateItems.includes(i)))
+                this.setState({items: updateItems})
+            }
+            removeItem = (i) => {
+                const updateItems = [...this.state.items]
+                let item = updateItems.findIndex(el => el.id === i.id)
+                updateItems.splice(item, 1)
+                this.setState({items: updateItems})
+            }
             
             render() {
+                const {items} = this.state
                 return (
                     <div>
                         {App.items.map((i, idx) => (
                             <div key={i.id}>{i.value}</div>
                         ))}
+                        <div>
+                            <hr />
+                        </div>
+                        <div>
+                            <button disabled={items.length >= App.items.length} onClick={this.addItem} style={{font: 'inherit'}}>+</button>
+                            {items.map((i, index) => ( // la propiedad key gestiona internamente como estan conectados los datos a cada elemento en el dom real
+                                // por lo tanto esta propiedad debe ser un identificador unico entre los diferentes elementos que va iterando
+                                <div key={i.id}> 
+                                    <button onClick={this.removeItem.bind(this, i)} style={{font: 'inherit'}}>-</button>
+                                    {i.value}:
+                                    <input type='text' defaultValue={i.id} />
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )
             }
