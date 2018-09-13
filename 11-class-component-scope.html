@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>11 - class component scope</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
+    <style>
+        button {
+            padding: 13px;
+            font: inherit;
+            border: 1px solid #639c56;
+            background-color: #a1d697;
+        }
+        button:hover {
+            background-color: #83a47c;
+            color: #f2f2f2;
+        }
+        button:active {
+            background-color: #92da82;
+            color: #303030;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type='text/babel'>
+        const rootElement = document.getElementById('root')
+
+        class Counter extends React.Component {
+            state = {counter: 0}
+
+            handleClick() { // metodos de clase necesitan adherir(bind) el this al scope
+                this.setState(prevState => ({counter: prevState.counter + 1}))
+            }
+
+            render() {
+                return (
+                    <div>
+                        <button onClick={this.handleClick.bind(this)}>{this.state.counter}</button>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Counter />, rootElement)
+    </script>
+</body>
+</html>
