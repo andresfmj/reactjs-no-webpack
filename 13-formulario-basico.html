@@ -6,36 +6,85 @@
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
+    <style>
+        body,html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        input {
+            font-size: 1.2em;
+            border: 1px solid lightskyblue;
+            margin: 0px 4px;
+        }
+        button {
+            font-size: 1.2em;
+            border: 1px solid seagreen;
+            background-color: lightseagreen;
+            color: white;
+        }
+        button:disabled {
+            color: lightgrey;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
     <script type='text/babel'>
         const rootElement = document.getElementById('root')
         class FormBasic extends React.Component {
+            state = {error: this.props.getErrorMessage('')}
             handleSubmit = (event) => {
                 event.preventDefault()
                 console.log({target: event.target})
                 console.log({inputVal: event.target[0].value})
                 console.log({inputNameVal: event.target.elements.username.value})
                 console.log({inputRefVal: this.inputNode.value})
+
+                const value = this.inputNode.value
+                const error = this.props.getErrorMessage(value)
+                if (error) {
+                    alert(`error: ${error}`)
+                } else {
+                    alert(`success: ${value}`)
+                }
+
                 this.inputNode.focus()
                 this.inputNode.value = ''
             }
+            handleChange = (event) => {
+                const {value} = event.target
+                this.setState({error: this.props.getErrorMessage(value)})
+            }
             render() {
+                const {error} = this.state
                 return (
                     <div>
                         <form onSubmit={this.handleSubmit}>
                             <label>
                                 Nombre:
-                                <input type='text' name='username' ref={node => (this.inputNode = node)} />
+                                <input type='text' onChange={this.handleChange} autocomplete='off' name='username' ref={node => (this.inputNode = node)} />
                             </label>
-                            <button type='submit'>Enviar</button>
+                            <button disabled={error===null ? false : true} type='submit'>Enviar</button>
+                            <div>
+                                {error !== null
+                                ?
+                                    <span style={{color: 'red'}}>{error}</span>
+                                : ''
+                                }
+                            </div>
                         </form>
                     </div>
                 )
             }
         }
-        ReactDOM.render(<FormBasic />, rootElement)
+        ReactDOM.render(<FormBasic getErrorMessage={(value) => {
+            if (value.length < 3) {
+                return `El campo debe ser de al menos 3 caracteres, has escrito ${value}`
+            }
+            if (!value.includes('s')) {
+                return `Has escrito ${value} y el campo requiere que incluya una s`
+            }
+            return null
+        }} />, rootElement)
     </script>
 </body>
 </html>
