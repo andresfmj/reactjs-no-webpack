@@ -8,6 +8,9 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
+        body,html {
+            font-family: "Helvetica", sans-serif;
+        }
         .userbox {
             margin: 0px auto;
             padding: 10px;
@@ -36,37 +39,59 @@
             state = {company: undefined, profilePic: undefined, loaded: false}
             componentDidMount() {
                 console.log('[DidMount] User!')
-                axios({
-                    method: 'post',
-                    url: 'https://api.github.com/graphql',
-                    data: {
-                        query: `{
-                            user(login: "${this.props.username}") {
-                                company
-                                avatarUrl
-                            }
-                        }`
-                    },
-                    headers: {
-                        Authorization: `bearer TOKEN` // cambiar esto por un token que se puede
-                                                    // generar desde las opciones de desarrollador en la cuenta de github
-                    },
-                }).then(response => {
-                    this.setState({
-                        company: response.data.data.user.company,
-                        profilePic: response.data.data.user.avatarUrl,
-                        loaded: true
+                console.log(this.props.username)
+                if (this.props.username && this.props.username.length > 0) {
+                    axios({
+                        method: 'post',
+                        url: 'https://api.github.com/graphql',
+                        data: {
+                            query: `{
+                                user(login: "${this.props.username}") {
+                                    company
+                                    avatarUrl
+                                }
+                            }`
+                        },
+                        headers: {
+                            Authorization: `bearer TOKEN` 
+                            // cambiar esto por un token que se puede
+                            // generar desde las opciones de desarrollador en la cuenta de github
+                        },
+                    }).then(response => {
+                        this.setState({
+                            company: response.data.data.user.company,
+                            profilePic: response.data.data.user.avatarUrl,
+                            loaded: true
+                        })
+                    }).catch(error => {
+                        this.setState({
+                            error,
+                            loaded: false
+                        })
                     })
-                })
+                } else {
+                    alert('Hace falta definir el nombre de usuario que desea buscar')
+                }
+                
             }
             render() {
+                const error = this.state.error
+                let errorMessage = error && error.response.status === 401 ? error.response.data.message : null
+                console.log(errorMessage)
+
                 return (
                     <div className='userbox'>
                         <h2>
                             <span>@{this.props.username}</span>
                             <span style={{width: '100%', textAlign: 'right'}}><img src={this.state.profilePic} width='70' /></span>
                         </h2>
-                        <p>Su trabajo es en {this.state.loaded ? this.state.company || '[se desconoce]' : '...'}</p>
+                        <p>
+                            {
+                                error !== null && this.state.loaded ?
+                                `Su trabajo es en ${this.state.company || '[se desconoce]'}` : null
+                            }
+                        </p>
+                        <p>{errorMessage !== null ? `Error code: ${error.response.status}: ${errorMessage}` : null}</p>
                     </div>
                 )
             }
