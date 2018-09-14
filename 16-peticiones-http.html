@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>16 - peticiones http</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        .userbox {
+            margin: 0px auto;
+            padding: 10px;
+            width: 360px;
+            border: 1px solid lightslategray;
+            box-shadow: 2px 2px 0px slategray;
+        }
+        .userbox h2 {
+            margin: 0px 0px 8px 0px;
+            padding: 14px;
+            border-bottom: 1px solid slateblue;
+            display: flex;
+            align-items: center;
+        }
+        p {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type='text/babel'>
+        const rootElement = document.getElementById('root')
+        class User extends React.Component {
+            state = {company: undefined, profilePic: undefined, loaded: false}
+            componentDidMount() {
+                console.log('[DidMount] User!')
+                axios({
+                    method: 'post',
+                    url: 'https://api.github.com/graphql',
+                    data: {
+                        query: `{
+                            user(login: "${this.props.username}") {
+                                company
+                                avatarUrl
+                            }
+                        }`
+                    },
+                    headers: {
+                        Authorization: `bearer TOKEN` // cambiar esto por un token que se puede
+                                                    // generar desde las opciones de desarrollador en la cuenta de github
+                    },
+                }).then(response => {
+                    this.setState({
+                        company: response.data.data.user.company,
+                        profilePic: response.data.data.user.avatarUrl,
+                        loaded: true
+                    })
+                })
+            }
+            render() {
+                return (
+                    <div className='userbox'>
+                        <h2>
+                            <span>@{this.props.username}</span>
+                            <span style={{width: '100%', textAlign: 'right'}}><img src={this.state.profilePic} width='70' /></span>
+                        </h2>
+                        <p>Su trabajo es en {this.state.loaded ? this.state.company || '[se desconoce]' : '...'}</p>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<User username='fernanitychamp' />, rootElement)
+    </script>
+</body>
+</html>
